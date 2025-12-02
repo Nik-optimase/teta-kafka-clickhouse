@@ -1,0 +1,54 @@
+version: 2
+
+sources:
+  - name: transactions_db
+    database: transactions_db
+    schema: transactions_db
+    tables:
+      - name: transactions
+        description: Raw transactions data from ClickHouse ingestion.
+        columns:
+          - name: transaction_time
+            description: Timestamp of the transaction
+            tests:
+              - not_null
+          - name: merch
+            description: Merchant identifier
+            tests:
+              - not_null
+          - name: cat_id
+            description: Transaction category ID
+            tests:
+              - not_null
+          - name: amount
+            description: Transaction amount
+            tests:
+              - not_null
+          - name: name_1
+            description: Customer first name
+          - name: name_2
+            description: Customer last name
+          - name: gender
+            description: Gender (M/F)
+            tests:
+              - not_null
+              - accepted_values:
+                  values: ['M', 'F']
+          - name: us_state
+            description: U.S. state
+            tests:
+              - not_null
+          - name: lat
+            description: Customer latitude
+          - name: lon
+            description: Customer longitude
+          - name: merchant_lat
+            description: Merchant latitude
+          - name: merchant_lon
+            description: Merchant longitude
+          - name: target
+            description: Fraud flag (1 if fraudulent)
+            tests:
+              - not_null
+              - accepted_values:
+                  values: [0, 1]
