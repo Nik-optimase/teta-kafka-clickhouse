@@ -1,0 +1,99 @@
+version: 2
+
+models:
+  - name: mart_daily_state_metrics
+    description: Daily transaction metrics by state including total transactions, amount, average, 95th percentile, and share of large transactions.
+    columns:
+      - name: transaction_date
+        tests:
+          - not_null
+      - name: state
+        tests:
+          - not_null
+      - name: total_transactions
+        tests:
+          - not_null
+      - name: sum_amount
+        tests:
+          - not_null
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - transaction_date
+            - state
+
+  - name: mart_fraud_by_category
+    description: Fraud analysis by category with transaction counts, fraud counts and fraud rate.
+    columns:
+      - name: category
+        tests:
+          - not_null
+      - name: fraud_rate
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              max_value: 100
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - category
+
+  - name: mart_fraud_by_state
+    description: Fraud analysis by state with transaction counts, fraud counts, fraud rate, unique customers and merchants.
+    columns:
+      - name: state
+        tests:
+          - not_null
+      - name: fraud_rate
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              max_value: 100
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - state
+
+  - name: mart_customer_risk_profile
+    description: Risk profiling of customers based on fraud rate and average amount.
+    columns:
+      - name: customer_name
+        tests:
+          - not_null
+      - name: risk_level
+        tests:
+          - accepted_values:
+              values: ['LOW', 'MEDIUM', 'HIGH']
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - customer_name
+
+  - name: mart_hourly_fraud_pattern
+    description: Fraud patterns aggregated by day of week and transaction hour.
+    columns:
+      - name: day_of_week
+        tests:
+          - not_null
+      - name: transaction_hour
+        tests:
+          - not_null
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - day_of_week
+            - transaction_hour
+
+  - name: mart_merchant_analytics
+    description: Merchant analytics with transaction and fraud metrics and suspicion flag.
+    columns:
+      - name: merchant
+        tests:
+          - not_null
+      - name: suspicious_flag
+        tests:
+          - not_null
+    tests:
+      - dbt_utils.unique_combination_of_columns:
+          combination_of_columns:
+            - merchant
