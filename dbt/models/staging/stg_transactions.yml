@@ -1,0 +1,54 @@
+version: 2
+
+models:
+  - name: stg_transactions
+    description: "Cleaned and enriched transactions staging model"
+    columns:
+      - name: transaction_date
+        description: Date of the transaction
+        tests:
+          - not_null
+      - name: transaction_hour
+        description: Hour of the transaction
+      - name: day_of_week
+        description: Day of the week (1=Mon)
+      - name: transaction_time
+        description: Timestamp of the transaction
+        tests:
+          - not_null
+      - name: merchant
+        description: Merchant identifier
+        tests:
+          - not_null
+      - name: category_id
+        description: Category of the transaction
+      - name: amount
+        description: Transaction amount
+        tests:
+          - not_null
+      - name: first_name
+        description: Customer first name
+      - name: last_name
+        description: Customer last name
+      - name: gender
+        description: Customer gender
+        tests:
+          - accepted_values:
+              values: ['M', 'F']
+      - name: state
+        description: U.S. state
+      - name: customer_lat
+        description: Customer latitude
+      - name: customer_lon
+        description: Customer longitude
+      - name: merchant_lat
+        description: Merchant latitude
+      - name: merchant_lon
+        description: Merchant longitude
+      - name: is_fraud
+        description: Fraud flag
+        tests:
+          - accepted_values:
+              values: [0, 1]
+      - name: amount_bucket
+        description: Amount bucket segmentation (macro result)
